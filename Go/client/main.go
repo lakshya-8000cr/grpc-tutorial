@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+
 func main() {
 	conn, err := grpc.NewClient(
 		"localhost:50051",
@@ -21,4 +22,27 @@ func main() {
 		log.Fatal(err)
 	}
 	defer conn.Close()
+
+	c := pb.NewGreeterClient(conn)
+
+	
+ctx, cancel := context.WithTimeout(
+	context.Background(),
+	time.Second,
+)
+
+defer cancel()
+
+res, err := c.SayHello(
+	ctx,
+	&pb.HelloRequest{
+		Name: "Lakshya",
+	},
+)
+
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Println(res.Message)
 }
