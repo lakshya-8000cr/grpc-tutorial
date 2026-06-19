@@ -25,26 +25,62 @@ func main() {
 	}
 	defer conn.Close() // close the connection 
 
-	c := pb.NewGreeterClient(conn) // this is object initializing the connection
+c := pb.NewUserServiceClient(conn)
 
-	
-ctx, cancel := context.WithTimeout( // if server didnt respond with in 1s second cut of the connection
-	context.Background(),
-	time.Second,
-)
-
+ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 defer cancel()
 
-res, err := c.SayHello(  // this part which is calling and sending the name like rest 
-	ctx,
-	&pb.HelloRequest{
-		Name: "Lakshya",
-	},
-)
+	
+
+user1, err := c.AddUser(ctx, &pb.AddUserRequest{
+	Name:  "Lakshya",
+	Email: "lakshya@example.com",
+})
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println("Added:", user1.User)
+
+user2, err := c.AddUser(ctx, &pb.AddUserRequest{
+	Name:  "Ayush",
+	Email: "ayush@example.com",
+})
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println("Added:", user2.User)
+
+list, err := c.ListUsers(ctx, &pb.ListUsersRequest{})
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println("All users:", list.Users)
+
+get, err := c.GetUser(ctx, &pb.GetUserRequest{
+	Id: user1.User.Id,
+})
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println("Fetched:", get.User)
+
+del, err := c.DeleteUser(ctx, &pb.DeleteUserRequest{
+	Id: user1.User.Id,
+})
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println(del.Message)
+
+listAfterDelete, err := c.ListUsers(ctx, &pb.ListUsersRequest{})
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println("After delete:", listAfterDelete.Users)
+
 
 if err != nil {
 	log.Fatal(err)
 }
 
-fmt.Println(res.Message)
 }

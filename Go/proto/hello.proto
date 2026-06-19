@@ -4,14 +4,46 @@ package hello;
 
 option go_package = "grpc-practice/proto/hellopb";
 
-service Greeter {
-  rpc SayHello (HelloRequest) returns (HelloResponse);
+service UserService {
+  rpc AddUser  (AddUserRequest) returns (AddUserResponse);
+  rpc GetUser  (GetUserRequest) returns (GetUserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
 }
 
-message HelloRequest {
+message User {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message AddUserRequest {
   string name = 1;
+  string email = 2;
 }
 
-message HelloResponse {
+message AddUserResponse {
+  User user = 1;
+}
+
+message GetUserRequest {
+  int32 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message ListUsersRequest {}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+message DeleteUserRequest {
+  int32 id = 1;
+}
+
+message DeleteUserResponse {
   string message = 1;
 }
