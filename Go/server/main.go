@@ -36,7 +36,7 @@ func (s *server) AddUser(ctx context.Context, req *pb.AddUserRequest) (*pb.AddUs
 }
 
 func (s *server) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	user, ok := s.users[req.Id]
+	user, ok := s.users[req.Id]=
 	if !ok {
 		return nil, fmt.Errorf("user with id %d not found", req.Id)
 	}
